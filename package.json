@@ -1,0 +1,21 @@
+{
+  "name": "amp-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "good": "^7.0.2",
+    "good-console": "^6.1.2",
+    "good-squeeze": "^4.0.0",
+    "hapi": "^15.0.3",
+    "inert": "^4.0.2"
+  },
+  "devDependencies": {
+    "ecstatic": "^2.1.0"
+  }
+}
