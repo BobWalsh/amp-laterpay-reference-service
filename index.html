@@ -23,20 +23,16 @@
           "authorization.json?rid=READER_ID&url=SOURCE_URL",
       "pingback":
           "pingback.json?rid=READER_ID&url=SOURCE_URL",
-      "login":
-          "buy-article.html?rid=READER_ID&url=SOURCE_URL&amp_url=AMPDOC_URL&canonical_url=CANONICAL_URL&referrer=DOCUMENT_REFERRER&viewer=VIEWER&authdata=AUTHDATA(access)&return=RETURN_URL",
+      "login": {
+        "buy-article": "buy-article.html?rid=READER_ID&url=SOURCE_URL&amp_url=AMPDOC_URL&canonical_url=CANONICAL_URL&referrer=DOCUMENT_REFERRER&viewer=VIEWER&authdata=AUTHDATA(access)&return=RETURN_URL",
+        "buy-week-pass": "buy-time-pass.html?type=week&rid=READER_ID&url=SOURCE_URL&amp_url=AMPDOC_URL&canonical_url=CANONICAL_URL&referrer=DOCUMENT_REFERRER&viewer=VIEWER&authdata=AUTHDATA(access)&return=RETURN_URL"
+      },
       "authorizationFallbackResponse": {
         "access": false,
         "error": true
       }
     }
     </script>
-    <!--
-      "login": {
-        "buy-article": "buy-article.html?rid=READER_ID&url=SOURCE_URL",
-        "buy-week-pass": "buy-time-pass.html?type=week&rid=READER_ID&url=SOURCE_URL"
-      },
-    -->
 
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <style amp-custom>
@@ -53,6 +49,7 @@
       .ipsum {
         max-width: 600px;
       }
+
     </style>
 
     <script async custom-element="amp-access" src="https://cdn.ampproject.org/v0/amp-access-0.1.js"></script>
@@ -62,13 +59,18 @@
   <body>
     <h1>AMP LaterPay demo</h1>
 
-    <section amp-access="NOT access" amp-access-hide>
-      <a on="tap:amp-access.login">Read now, pay later</a>
-      <!--the links below are currently not working and we're awaiting feedback from google on why-->
-      <!--<a on="tap:amp-access.login.buy-article">Read now, pay later</a>
-      <a on="tap:amp-access.login.buy-week-pass">Buy week pass</a>-->
+    <ul amp-access="NOT access" amp-access-hide>
+      <li><a on="tap:amp-access.login-buy-article">Read now, pay later</a></li>
+      <li><a on="tap:amp-access.login-buy-week-pass">Buy week pass</a></li>
+    </ul>
+
+    <section amp-access="access AND timepass = 'week'" amp-access-hide>
+      You have access to this and other articles for a week.
     </section>
 
+    <section amp-access="access AND NOT timepass" amp-access-hide>
+      You have bought this article!
+    </section>
 
     <section amp-access="access" amp-access-hide class="ipsum">
       <a href="/logout">Logout</a>

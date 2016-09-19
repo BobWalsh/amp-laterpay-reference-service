@@ -7,6 +7,7 @@ const server = new Hapi.Server({
 });
 
 let authorized = false;
+let timepass = null;
 
 server.connection({
     host: 'localhost',
@@ -45,9 +46,21 @@ server.register([
 
   server.route({
     method: 'GET',
+    path: '/buy-time-pass.html',
+    handler: (request, reply) => {
+      authorized = true;
+      timepass = 'week';
+      return reply
+      .redirect(`${request.query.return}#success=true`)
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/logout',
     handler: (request, reply) => {
       authorized = false;
+      timepass = null;
       return reply
       .redirect('index.html')
     }
@@ -58,10 +71,10 @@ server.register([
     path: '/authorization.json',
     handler: (request, reply) => {
       if (authorized) {
-        return reply({access: true, error: false})
+        return reply({access: true, error: false, timepass: timepass})
         .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
       } else {
-        return reply({access: false, error: true})
+        return reply({access: false, error: true, timepass: timepass})
         .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
       }
     }
