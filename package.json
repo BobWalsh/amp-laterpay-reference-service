@@ -1,9 +1,13 @@
 {
-  "name": "amp-prototype",
+  "name": "amp-laterpay-demo",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "6.9.1"
+  },
   "scripts": {
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
   "author": "",
@@ -16,6 +20,5 @@
     "inert": "^4.0.2"
   },
   "devDependencies": {
-    "ecstatic": "^2.1.0"
   }
 }

@@ -3,36 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Hello, AMPs</title>
-    <link rel="canonical" href="http://localhost:8080/index.html" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-
-    <script type="application/ld+json">
-      {
-        "@context": "http://schema.org",
-        "@type": "NewsArticle",
-        "headline": "Open-source framework for publishing content",
-        "datePublished": "2015-10-07T12:02:41Z",
-        "image": [
-          "logo.jpg"
-        ]
-      }
-    </script>
-    <script id="amp-access" type="application/json">
-    {
-      "authorization":
-          "authorization.json?rid=READER_ID&url=SOURCE_URL",
-      "pingback":
-          "pingback.json?rid=READER_ID&url=SOURCE_URL",
-      "login": {
-        "buy-article": "buy-article.html?rid=READER_ID&url=SOURCE_URL&amp_url=AMPDOC_URL&canonical_url=CANONICAL_URL&referrer=DOCUMENT_REFERRER&viewer=VIEWER&authdata=AUTHDATA(access)&return=RETURN_URL",
-        "buy-week-pass": "buy-time-pass.html?type=week&rid=READER_ID&url=SOURCE_URL&amp_url=AMPDOC_URL&canonical_url=CANONICAL_URL&referrer=DOCUMENT_REFERRER&viewer=VIEWER&authdata=AUTHDATA(access)&return=RETURN_URL"
-      },
-      "authorizationFallbackResponse": {
-        "access": false,
-        "error": true
-      }
-    }
-    </script>
 
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <style amp-custom>
@@ -52,32 +23,14 @@
 
     </style>
 
-    <script async custom-element="amp-access" src="https://cdn.ampproject.org/v0/amp-access-0.1.js"></script>
-    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async src="/dist/v0.js"></script>
   </head>
   <body>
     <h1>AMP LaterPay demo</h1>
 
-    <ul amp-access="NOT access" amp-access-hide>
-      <li><a on="tap:amp-access.login-buy-article">Read now, pay later</a></li>
-      <li><a on="tap:amp-access.login-buy-week-pass">Buy week pass</a></li>
+    <ul>
+      <li><a href="article-access-laterpay.amp.html">article demo</a></li>
     </ul>
-
-    <section amp-access="access AND timepass = 'week'" amp-access-hide>
-      You have access to this and other articles for a week.
-    </section>
-
-    <section amp-access="access AND NOT timepass" amp-access-hide>
-      You have bought this article!
-    </section>
-
-    <section amp-access="access" amp-access-hide class="ipsum">
-      <a href="/logout">Logout</a>
-      <p>Very ipsum such dolor amet wow much beta so spans many such margin very layer very spans such filler such content concern very border very filler very excuse much spans very much develop. Such spans many css much beta, many border many develop many many padding very so very spans such excuse such beta so filler. Such fierce many padding amaze such filler so web many beta so scare much. Amaze so border many very develop so many develop.</p>
-      <p>So excuse such excuse much divs such so picture excite very develop very border such beta many beta so divs very such develop much excuse. So filler much picture very border so styling many margin, much spans so margin such. Such beta so border so css, so excuse many border very divs so web concern many web. So picture such margin such web so develop, such such beta many css so divs so padding so margin very layer.</p>
-      <p>So css so border so spans such excuse so concern very margin so padding such filler very css many margin so web such fierce. Much excuse much divs very picture excite, many beta so margin much beta much picture very filler such divs. Very layer very spans such padding so css many develop such margin. So padding such filler much excuse, many margin such fierce very much beta much so css so filler so web many beta such spans.</p>
-    </section>
 
   </body>
 </html>

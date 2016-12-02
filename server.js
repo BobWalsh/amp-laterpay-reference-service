@@ -11,7 +11,13 @@ let timepass = null;
 
 server.connection({
     host: 'localhost',
-    port: 8080
+    port: process.env.NODE_ENV === 'production' ? 80 : 8080,
+    routes: {
+      cors: {
+        credentials: true,
+        additionalExposedHeaders: ['AMP-Access-Control-Allow-Source-Origin']
+      }
+    }
 });
 
 server.register([
@@ -36,7 +42,7 @@ server.register([
 
   server.route({
     method: 'GET',
-    path: '/buy-article.html',
+    path: '/dialog/add',
     handler: (request, reply) => {
       authorized = true;
       return reply
@@ -46,7 +52,7 @@ server.register([
 
   server.route({
     method: 'GET',
-    path: '/buy-time-pass.html',
+    path: '/dialog/buy',
     handler: (request, reply) => {
       authorized = true;
       timepass = 'week';
@@ -68,34 +74,55 @@ server.register([
 
   server.route({
     method: 'GET',
-    path: '/authorization.json',
+    path: '/api/public/amp',
     handler: (request, reply) => {
       if (authorized) {
-        return reply({access: true, error: false, timepass: timepass})
-        .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
+        return reply({
+          access: true,
+          error: false
+        })
+        .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8000')
+        .header('Access-Control-Allow-Origin', 'http://localhost:8000')
       } else {
-        return reply({access: false, error: true, timepass: timepass})
-        .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
+        return reply({
+          access: false,
+          apl: 'http://localhost:8080/already_purchased',
+          timepasses: [
+            {
+              title: 'Weekly pass',
+              description: 'This pass allows access to the content for a week',
+              price: {
+                EUR: 390
+              },
+              purchase_type: 'sis',
+              purchase_url: 'http://localhost:8080/dialog/buy/timepass/weekly',
+              tp_title: 'TP',
+              validity_unit: 'd',
+              validity_value: 1
+            }
+          ],
+          premiumcontent: {
+            price: {
+              EUR: 39
+            },
+            purchase_url: 'http://localhost:8080/dialog/add',
+            purchase_type: 'ppu'
+          }
+        })
+        .code(402)
+        .header('AMP-Access-Control-Allow-Source-Origin', request.query['__amp_source_origin'], {override: true})
+        .header('Access-Control-Allow-Origin', request.query['__amp_source_origin'], {override: true})
       }
     }
   })
 
   server.route({
-    method: 'POST',
-    path: '/pingback.json',
-    handler: (request, reply) => {
-      return reply({ping: 'pong'})
-      .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
-    }
-  })
-
-  server.route({
       method: 'GET',
-      path:'/{filename}',
+      path:'/{filename*}',
       handler: (request, reply) => {
           return reply
           .file(`./${request.params.filename}`)
-          .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
+          //.header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
       }
   });
 
