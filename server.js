@@ -11,7 +11,7 @@ let timepass = null;
 
 server.connection({
     host: 'localhost',
-    port: process.env.NODE_ENV === 'production' ? 80 : 8080,
+    port: process.env.NODE_ENV === 'production' ? process.env.PORT : 8080,
     routes: {
       cors: {
         credentials: true,
