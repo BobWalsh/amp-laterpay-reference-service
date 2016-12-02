@@ -39,7 +39,8 @@ var _srcVsync = require('../../../src/vsync');
 var _srcXhr = require('../../../src/xhr');
 
 var TAG = 'amp-access-laterpay';
-var CONFIG_URL = 'https://connector.laterpay.net';
+//const CONFIG_URL = 'https://connector.laterpay.net';
+var CONFIG_URL = 'https://amp-laterpay-demo.herokuapp.com';
 var CONFIG_BASE_PATH = '/api/public/amp?' + 'article_url=CANONICAL_URL' + '&amp_reader_id=READER_ID' + '&return_url=RETURN_URL';
 var AUTHORIZATION_TIMEOUT = 3000;
 
@@ -116,7 +117,14 @@ var LaterpayVendor = (function () {
     /** @private @const {?Node} */
     this.purchaseButton_ = null;
 
-    var configUrl = (_srcMode.getMode().localDev || _srcMode.getMode().development) && this.laterpayConfig_.configUrl ? this.laterpayConfig_.configUrl : CONFIG_URL;
+    var configUrl = this.laterpayConfig_.configUrl;
+    /*
+    const configUrl = (
+      (getMode().localDev || getMode().development) &&
+      this.laterpayConfig_.configUrl
+    ) ? this.laterpayConfig_.configUrl
+      : CONFIG_URL;
+      */
 
     /** @private {string} */
     this.purchaseConfigBaseUrl_ = configUrl + CONFIG_BASE_PATH;
@@ -146,12 +154,16 @@ var LaterpayVendor = (function () {
   LaterpayVendor.prototype.authorize = function authorize() {
     var _this = this;
 
-    _srcLog.user().assert(_srcExperiments.isExperimentOn(this.win_, 'amp-access-laterpay'), 'Enable "amp-access-laterpay" experiment');
+    /*
+    user().assert(isExperimentOn(this.win_, 'amp-access-laterpay'),
+        'Enable "amp-access-laterpay" experiment');
+        */
     return this.getPurchaseConfig_().then(function (response) {
       if (response.status === 204) {
         throw _srcLog.user().createError('No merchant domains have been matched for this ' + 'article, or no paid content configurations are setup.');
       }
       _this.emptyContainer_();
+      window.scrollTo(0, 0);
       return { access: response.access };
     }, function (err) {
       var status = err.response.status;
@@ -174,7 +186,7 @@ var LaterpayVendor = (function () {
     var _this2 = this;
 
     var url = this.purchaseConfigBaseUrl_ + '&article_title=' + this.getArticleTitle_();
-    var urlPromise = this.accessService_.buildUrl_(url, /* useAuthData */false);
+    var urlPromise = this.accessService_.buildUrl(url, /* useAuthData */false);
     return urlPromise.then(function (url) {
       _srcLog.dev().fine(TAG, 'Authorization URL: ', url);
       return _this2.timer_.timeoutPromise(AUTHORIZATION_TIMEOUT, _this2.xhr_.fetchJson(url, {
@@ -233,14 +245,14 @@ var LaterpayVendor = (function () {
     var laterpayList = this.getContainer_();
     var listContainer = this.doc_.createElement('ul');
     // TODO set these up somewhere else and make them configurable
-    this.purchaseConfig_.premiumcontent.title = 'Buy this article';
-    this.purchaseConfig_.premiumcontent.description = 'title of the article should go here';
-    listContainer.appendChild(this.createPurchaseOption_(this.purchaseConfig_.premiumcontent));
+    this.purchaseConfig_.premiumcontent.title = 'Buy only this article';
+    this.purchaseConfig_.premiumcontent.description = this.getArticleTitle_();
+    listContainer.appendChild(this.createPurchaseOption_(this.purchaseConfig_.premiumcontent, 'Buy Now, Pay Later'));
     this.purchaseConfig_.timepasses.forEach(function (timepass) {
-      listContainer.appendChild(_this4.createPurchaseOption_(timepass));
+      listContainer.appendChild(_this4.createPurchaseOption_(timepass, 'Buy Now'));
     });
     var purchaseButton = this.doc_.createElement('button');
-    purchaseButton.textContent = 'Confirm your selection';
+    purchaseButton.textContent = 'Buy Now';
     purchaseButton.disabled = true;
     this.purchaseButton_ = purchaseButton;
     this.purchaseButtonListener_ = _srcEventHelper.listen(purchaseButton, 'click', this.handlePurchase_.bind(this));
@@ -250,30 +262,47 @@ var LaterpayVendor = (function () {
 
   /**
    * @param {!PurchaseOption} option
+   * @param {!string} purchaseActionLabel
    * @return {!Node}
    * @private
    */
 
-  LaterpayVendor.prototype.createPurchaseOption_ = function createPurchaseOption_(option) {
+  LaterpayVendor.prototype.createPurchaseOption_ = function createPurchaseOption_(option, purchaseActionLabel) {
     var li = this.doc_.createElement('li');
-    var title = this.doc_.createElement('label');
-    title['for'] = option.title;
+    var control = this.doc_.createElement('label');
+    control['for'] = option.title;
+    control.appendChild(this.createRadioControl_(option, purchaseActionLabel));
+    var titleContainer = this.doc_.createElement('div');
+    var title = this.doc_.createElement('span');
     title.textContent = option.title;
+    titleContainer.appendChild(title);
+    var description = this.doc_.createElement('p');
+    description.textContent = option.description;
+    titleContainer.appendChild(description);
+    control.appendChild(titleContainer);
+    li.appendChild(control);
+    var price = this.doc_.createElement('p');
+    price.textContent = this.formatPrice_(option.price);
+    li.appendChild(price);
+    return li;
+  };
+
+  /**
+   * @param {!PurchaseOption} option
+   * @param {!string} purchaseActionLabel
+   * @return {!Node}
+   * @private
+   */
+
+  LaterpayVendor.prototype.createRadioControl_ = function createRadioControl_(option, purchaseActionLabel) {
     var radio = this.doc_.createElement('input');
     radio.name = 'purchaseOption';
     radio.type = 'radio';
     radio.id = option.title;
     radio.value = option.purchase_url;
+    radio.setAttribute('data-purchase-action-label', purchaseActionLabel);
     this.purchaseOptionListeners_.push(_srcEventHelper.listen(radio, 'change', this.handlePurchaseOptionSelection_.bind(this)));
-    title.appendChild(radio);
-    li.appendChild(title);
-    var description = this.doc_.createElement('p');
-    description.textContent = option.description;
-    var price = this.doc_.createElement('p');
-    price.textContent = this.formatPrice_(option.price);
-    li.appendChild(description);
-    li.appendChild(price);
-    return li;
+    return radio;
   };
 
   /**
@@ -295,9 +324,10 @@ var LaterpayVendor = (function () {
    */
 
   LaterpayVendor.prototype.handlePurchaseOptionSelection_ = function handlePurchaseOptionSelection_(ev) {
+    ev.preventDefault();
     var selectedOptionClassname = 'amp-access-laterpay-selected';
     var prevPurchaseOption = this.selectedPurchaseOption_;
-    ev.preventDefault();
+    var purchaseActionLabel = ev.target.dataset.purchaseActionLabel;
     if (prevPurchaseOption && prevPurchaseOption.classList.contains(selectedOptionClassname)) {
       prevPurchaseOption.classList.remove(selectedOptionClassname);
     }
@@ -306,6 +336,7 @@ var LaterpayVendor = (function () {
     if (this.purchaseButton_.disabled) {
       this.purchaseButton_.disabled = false;
     }
+    this.purchaseButton_.textContent = purchaseActionLabel;
   };
 
   /**
@@ -4268,7 +4299,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1480694828544';
+var version = '1481021772855';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -4410,10 +4441,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1480694828544` and thus `mode.version` contain only
+  // Currently `1481021772855` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1480694828544 should contain
+  // TODO(erwinmombay): decide whether 1481021772855 should contain
   // minor version.
   return '01' + version;
 }

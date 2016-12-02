@@ -1,6 +1,11 @@
 const Hapi = require('hapi');
 const good = require('good');
 const inert = require('inert');
+const fs = require('fs');
+
+const HOST = process.env.NODE_ENV === 'production' ?
+    'https://amp-laterpay-demo.herokuapp.com' :
+    'http://localhost:8080'
 
 const server = new Hapi.Server({
   debug: {request: ['read']}
@@ -18,6 +23,15 @@ server.connection({
       }
     }
 });
+
+function renderTemplate(filePath, data) {
+  return new Promise((resolve) => {
+    fs.readFile(filePath, 'utf-8', (err, fileData) => {
+      const template = new Function('o', 'return `' + fileData + '`')
+      resolve(template(data));
+    })
+  })
+}
 
 server.register([
     inert,
@@ -43,6 +57,16 @@ server.register([
     method: 'GET',
     path: '/dialog/add',
     handler: (request, reply) => {
+      return reply(renderTemplate('add.html', {
+        returnUrl: request.query.return
+      }))
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/authorize/add',
+    handler: (request, reply) => {
       authorized = true;
       return reply
       .redirect(`${request.query.return}#success=true`)
@@ -51,7 +75,18 @@ server.register([
 
   server.route({
     method: 'GET',
-    path: '/dialog/buy',
+    path: '/dialog/buy/timepass/{type}',
+    handler: (request, reply) => {
+      return reply(renderTemplate('buy.html', {
+        timepassType: request.params.type,
+        returnUrl: request.query.return
+      }))
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/authorize/buy/timepass/{type}',
     handler: (request, reply) => {
       authorized = true;
       timepass = 'week';
@@ -67,7 +102,7 @@ server.register([
       authorized = false;
       timepass = null;
       return reply
-      .redirect('index.html')
+      .redirect('/index.html')
     }
   });
 
@@ -80,34 +115,40 @@ server.register([
           access: true,
           error: false
         })
-        .header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8000')
-        .header('Access-Control-Allow-Origin', 'http://localhost:8000')
+        .header('Cache-Control', 'no-cache no-store must-revalidate')
+        .header('Pragma', 'no-cache')
+        .header('Expires', 0)
+        .header('AMP-Access-Control-Allow-Source-Origin', HOST)
+        .header('Access-Control-Allow-Origin', HOST)
       } else {
         return reply({
           access: false,
-          apl: 'http://localhost:8080/already_purchased',
+          apl: HOST + '/already_purchased',
           timepasses: [
             {
-              title: 'Weekly pass',
+              title: '',
               description: 'This pass allows access to the content for a week',
               price: {
-                EUR: 390
+                USD: 99
               },
               purchase_type: 'sis',
-              purchase_url: 'http://localhost:8080/dialog/buy/timepass/weekly',
-              tp_title: 'TP',
+              purchase_url: HOST + '/dialog/buy/timepass/weekly',
+              tp_title: 'Weekly pass',
               validity_unit: 'd',
               validity_value: 1
             }
           ],
           premiumcontent: {
             price: {
-              EUR: 39
+              USD: 15
             },
-            purchase_url: 'http://localhost:8080/dialog/add',
+            purchase_url: HOST + '/dialog/add',
             purchase_type: 'ppu'
           }
         })
+        .header('Cache-Control', 'no-cache no-store must-revalidate')
+        .header('Pragma', 'no-cache')
+        .header('Expires', 0)
         .code(402)
         .header('AMP-Access-Control-Allow-Source-Origin', request.query['__amp_source_origin'], {override: true})
         .header('Access-Control-Allow-Origin', request.query['__amp_source_origin'], {override: true})
@@ -121,7 +162,6 @@ server.register([
       handler: (request, reply) => {
           return reply
           .file(`./${request.params.filename}`)
-          //.header('AMP-Access-Control-Allow-Source-Origin', 'http://localhost:8080')
       }
   });
 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="https://amp-laterpay-demo.herokuapp.com/add.html" >
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <title>Payment</title>
+    <style amp-custom>
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: sans-serif;
+        padding: 1em;
+      }
+      .container {
+        width: 500px;
+        height: 400px;
+        border: 2px solid #CCC;
+        background-color: #f6f6f6;
+        border-radius: 3px 3px 0 0;
+        padding: 0;
+      }
+      @media (max-width: 420px) {
+        body {
+          padding: 0;
+          background-color: #f6f6f6;
+        }
+        .container {
+          width: 100%;
+          border: none;
+        }
+      }
+      .container > .logo {
+        margin-left: 10px;
+        font-weight: normal;
+        font-size: 1em;
+        color: #888;
+      }
+      .container > h1 {
+        padding: 0;
+        margin: 0;
+      }
+      .info {
+        text-align: center;
+      }
+      .info > p {
+        padding: 0em 1em;
+      }
+      .items {
+        overflow: hidden;
+        padding: 2em 1em;
+        background: #fff;
+      }
+      .item-name {
+        float: left;
+      }
+      .item-price {
+        float: right;
+        text-align: right;
+      }
+      .item-name, .item-price .price {
+        font-size: 1.3em;
+      }
+      .item-price .price {
+        margin-bottom: 2px;
+      }
+      .item-price .taxes {
+        font-size: 0.8em;
+        margin-top: 0px;
+        color: #888;
+      }
+      .button-container {
+        padding-left: 10px;
+        padding-top: 30px;
+      }
+      button {
+        font-size: 1.2em;
+        padding: 0.6em 0.8em;
+        background-color: #01a99d;
+        border-radius: 4px;
+        border: 0;
+        color: #fff;
+      }
+    </style>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async src="/dist/v0.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="logo-cosmo.png" alt="">
+      </div>
+      <div class="info">
+        <h1>Use Now, Pay Later</h1>
+        <p>Purchase content and use it immediately, but pay later once you have bought 5 Euro worth of content.</p>
+      </div>
+      <div class="items">
+        <div class="item-price">
+          <p class="price">$0.15</p>
+          <p class="taxes">incl. 19% VAT</p>
+        </div>
+      </div>
+      <div class="button-container">
+        <button type="button" name="pay" id="pay">Buy Now, Pay Later</button>
+      </div>
+    </div>
+    <script type="text/javascript">
+      document.getElementById('pay').addEventListener('click', function (ev) {
+        window.location.href = '/authorize/add?return=${o.returnUrl}'
+      }, false)
+    </script>
+  </body>
+</html>

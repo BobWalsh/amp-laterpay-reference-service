@@ -2205,6 +2205,16 @@ var AccessService = (function () {
    * @param {string} url
    * @param {boolean} useAuthData Allows `AUTH(field)` URL var substitutions.
    * @return {!Promise<string>}
+   */
+
+  AccessService.prototype.buildUrl = function buildUrl(url, useAuthData) {
+    return this.buildUrl_(url, useAuthData);
+  };
+
+  /**
+   * @param {string} url
+   * @param {boolean} useAuthData Allows `AUTH(field)` URL var substitutions.
+   * @return {!Promise<string>}
    * @private
    */
 
@@ -7103,7 +7113,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1480694828544') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481020541424') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -8383,7 +8393,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1480694828544';
+var version = '1481020541424';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -8525,10 +8535,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1480694828544` and thus `mode.version` contain only
+  // Currently `1481020541424` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1480694828544 should contain
+  // TODO(erwinmombay): decide whether 1481020541424 should contain
   // minor version.
   return '01' + version;
 }

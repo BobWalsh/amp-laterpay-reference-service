@@ -2572,9 +2572,9 @@ _customElement.stubElements(self);
 // tag to give some information that can be used in error reports.
 // (At least by sophisticated users).
 if (self.console) {
-  (console.info || console.log).call(console, 'Powered by AMP ⚡ HTML shadows – Version 1480694828544');
+  (console.info || console.log).call(console, 'Powered by AMP ⚡ HTML shadows – Version 1481020541424');
 }
-self.document.documentElement.setAttribute('amp-version', '1480694828544');
+self.document.documentElement.setAttribute('amp-version', '1481020541424');
 
 },{"./chunk":14,"./custom-element":19,"./polyfills":50,"./runtime":58,"./service/ampdoc-impl":61}],11:[function(require,module,exports){
 exports.__esModule = true;
@@ -7897,7 +7897,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1480694828544') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481020541424') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -11260,7 +11260,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1480694828544';
+var version = '1481020541424';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -11402,10 +11402,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1480694828544` and thus `mode.version` contain only
+  // Currently `1481020541424` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1480694828544 should contain
+  // TODO(erwinmombay): decide whether 1481020541424 should contain
   // minor version.
   return '01' + version;
 }
@@ -22036,7 +22036,7 @@ var GlobalVariableSource = (function (_VariableSource) {
 
     // returns the AMP version number
     this.set('AMP_VERSION', function () {
-      return '1480694828544';
+      return '1481020541424';
     });
 
     this.set('BACKGROUND_STATE', function () {
