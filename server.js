@@ -58,7 +58,7 @@ server.register([
     path: '/dialog/add',
     handler: (request, reply) => {
       return reply(renderTemplate('add.html', {
-        returnUrl: request.query.return
+        returnUrl: request.query.return_url
       }))
     }
   });
@@ -69,7 +69,7 @@ server.register([
     handler: (request, reply) => {
       authorized = true;
       return reply
-      .redirect(`${request.query.return}#success=true`)
+      .redirect(`${request.query.return_url}#success=true`)
     }
   });
 
@@ -91,7 +91,17 @@ server.register([
       authorized = true;
       timepass = 'week';
       return reply
-      .redirect(`${request.query.return}#success=true`)
+      .redirect(`${request.query.return_url}#success=true`)
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/already_purchased',
+    handler: (request, reply) => {
+      authorized = true;
+      return reply
+      .redirect(`${request.query.return_url}#success=true`)
     }
   });
 

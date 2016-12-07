@@ -48,7 +48,8 @@ var DEFAULT_MESSAGES = {
   premiumContentTitle: 'Buy only this article',
   ppuButton: 'Buy Now, Pay Later',
   sisButton: 'Buy Now',
-  defaultButton: 'Buy Now'
+  defaultButton: 'Buy Now',
+  alreadyPurchasedLink: 'I already bought this'
 };
 
 /**
@@ -112,8 +113,11 @@ var LaterpayVendor = (function () {
     /** @private @const {!PurchaseConfig} */
     this.purchaseConfig_ = null;
 
-    /** @private @const {?Event} */
+    /** @private @const {?Function} */
     this.purchaseButtonListener_ = null;
+
+    /** @private @const {?Function} */
+    this.alreadyPurchasedListener_ = null;
 
     /** @private @const {!Array<Event>} */
     this.purchaseOptionListeners_ = [];
@@ -231,7 +235,7 @@ var LaterpayVendor = (function () {
    */
 
   LaterpayVendor.prototype.getContainer_ = function getContainer_() {
-    return this.doc_.querySelector('amp-access-laterpay-list');
+    return this.doc_.querySelector(TAG + '-list');
   };
 
   /**
@@ -252,6 +256,9 @@ var LaterpayVendor = (function () {
     }
     if (this.purchaseButtonListener_) {
       this.purchaseButtonListener_();
+    }
+    if (this.alreadyPurchasedListener_) {
+      this.alreadyPurchasedListener_();
     }
     return this.vsync_.mutatePromise(function () {
       _this3.containerEmpty_ = true;
@@ -275,11 +282,15 @@ var LaterpayVendor = (function () {
       listContainer.appendChild(_this4.createPurchaseOption_(timepass, _this4.i18n_.sisButton));
     });
     var purchaseButton = this.doc_.createElement('button');
+    purchaseButton.className = TAG + '-purchase-button';
     purchaseButton.textContent = this.i18n_.defaultButton;
     purchaseButton.disabled = true;
     this.purchaseButton_ = purchaseButton;
-    this.purchaseButtonListener_ = _srcEventHelper.listen(purchaseButton, 'click', this.handlePurchase_.bind(this));
+    this.purchaseButtonListener_ = _srcEventHelper.listen(purchaseButton, 'click', function (ev) {
+      _this4.handlePurchase_(ev, _this4.selectedPurchaseOption_.value);
+    });
     laterpayList.appendChild(listContainer);
+    laterpayList.appendChild(this.createAlreadyPurchasedLink_(this.purchaseConfig_.apl));
     laterpayList.appendChild(purchaseButton);
     this.containerEmpty_ = false;
   };
@@ -296,14 +307,17 @@ var LaterpayVendor = (function () {
     var control = this.doc_.createElement('label');
     control['for'] = option.tp_title;
     control.appendChild(this.createRadioControl_(option, purchaseActionLabel));
-    var titleContainer = this.doc_.createElement('div');
+    var metadataContainer = this.doc_.createElement('div');
+    metadataContainer.className = TAG + '-metadata';
     var title = this.doc_.createElement('span');
+    title.className = TAG + '-title';
     title.textContent = option.tp_title;
-    titleContainer.appendChild(title);
+    metadataContainer.appendChild(title);
     var description = this.doc_.createElement('p');
+    description.className = TAG + '-description';
     description.textContent = option.description;
-    titleContainer.appendChild(description);
-    control.appendChild(titleContainer);
+    metadataContainer.appendChild(description);
+    control.appendChild(metadataContainer);
     li.appendChild(control);
     li.appendChild(this.createPrice_(option.price));
     return li;
@@ -362,6 +376,26 @@ var LaterpayVendor = (function () {
   };
 
   /**
+   * @param {!string} href
+   * @returns {!Node}
+  */
+
+  LaterpayVendor.prototype.createAlreadyPurchasedLink_ = function createAlreadyPurchasedLink_(href) {
+    var _this5 = this;
+
+    var p = this.doc_.createElement('p');
+    p.className = TAG + '-already-purchased-container';
+    var a = this.doc_.createElement('a');
+    a.href = href;
+    a.textContent = this.i18n_.alreadyPurchasedLink;
+    this.alreadyPurchasedListener_ = _srcEventHelper.listen(a, 'click', function (ev) {
+      _this5.handlePurchase_(ev, href);
+    });
+    p.appendChild(a);
+    return p;
+  };
+
+  /**
    * @param {!Event} ev
    * @private
    */
@@ -383,12 +417,20 @@ var LaterpayVendor = (function () {
   };
 
   /**
+   * @param {!Event} ev
    * @private
    */
 
-  LaterpayVendor.prototype.handlePurchase_ = function handlePurchase_() {
-    var purchaseUrl = this.selectedPurchaseOption_.value;
-    this.accessService_.loginWithUrl(purchaseUrl);
+  LaterpayVendor.prototype.handlePurchase_ = function handlePurchase_(ev, purchaseUrl) {
+    var _this6 = this;
+
+    ev.preventDefault();
+    var configuredUrl = purchaseUrl + '?return_url=RETURN_URL' + '&article_url=SOURCE_URL' + '&amp_reader_id=READER_ID';
+    var urlPromise = this.accessService_.buildUrl(configuredUrl, /* useAuthData */false);
+    return urlPromise.then(function (url) {
+      _srcLog.dev().fine(TAG, 'Authorization URL: ', url);
+      _this6.accessService_.loginWithUrl(url);
+    });
   };
 
   return LaterpayVendor;
@@ -4342,7 +4384,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481118967718';
+var version = '1481113575004';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -4484,10 +4526,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481118967718` and thus `mode.version` contain only
+  // Currently `1481113575004` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481118967718 should contain
+  // TODO(erwinmombay): decide whether 1481113575004 should contain
   // minor version.
   return '01' + version;
 }
