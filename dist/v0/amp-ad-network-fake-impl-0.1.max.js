@@ -1360,7 +1360,7 @@ function buildAdUrl(a4a, baseUrl, startTime, slotNumber, queryParams, unboundedQ
   var allQueryParams = queryParams.concat([{
     name: 'is_amp',
     value: AmpAdImplementation.AMP_AD_XHR_TO_IFRAME_OR_AMP
-  }, { name: 'amp_v', value: '1481125481651' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
+  }, { name: 'amp_v', value: '1481126700570' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
     name: 'loc',
     value: global.location.href == documentInfo.canonicalUrl ? null : global.location.href
   }, { name: 'ref', value: referrer }]);
@@ -7143,7 +7143,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481125481651') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481126700570') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -9097,7 +9097,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481125481651';
+var version = '1481126700570';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -9239,10 +9239,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481125481651` and thus `mode.version` contain only
+  // Currently `1481126700570` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481125481651 should contain
+  // TODO(erwinmombay): decide whether 1481126700570 should contain
   // minor version.
   return '01' + version;
 }
@@ -10850,7 +10850,7 @@ var GlobalVariableSource = (function (_VariableSource) {
 
     // returns the AMP version number
     this.set('AMP_VERSION', function () {
-      return '1481125481651';
+      return '1481126700570';
     });
 
     this.set('BACKGROUND_STATE', function () {

@@ -1388,7 +1388,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481125481651';
+var version = '1481126700570';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -1530,10 +1530,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481125481651` and thus `mode.version` contain only
+  // Currently `1481126700570` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481125481651 should contain
+  // TODO(erwinmombay): decide whether 1481126700570 should contain
   // minor version.
   return '01' + version;
 }
