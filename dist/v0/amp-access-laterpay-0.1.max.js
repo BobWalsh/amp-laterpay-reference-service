@@ -290,8 +290,8 @@ var LaterpayVendor = (function () {
       _this4.handlePurchase_(ev, _this4.selectedPurchaseOption_.value);
     });
     laterpayList.appendChild(listContainer);
-    laterpayList.appendChild(this.createAlreadyPurchasedLink_(this.purchaseConfig_.apl));
     laterpayList.appendChild(purchaseButton);
+    laterpayList.appendChild(this.createAlreadyPurchasedLink_(this.purchaseConfig_.apl));
     this.containerEmpty_ = false;
   };
 
@@ -4384,7 +4384,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481113575004';
+var version = '1481125481651';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -4526,10 +4526,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481113575004` and thus `mode.version` contain only
+  // Currently `1481125481651` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481113575004 should contain
+  // TODO(erwinmombay): decide whether 1481125481651 should contain
   // minor version.
   return '01' + version;
 }
