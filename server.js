@@ -118,8 +118,8 @@ server.register([
         .header('Cache-Control', 'no-cache no-store must-revalidate')
         .header('Pragma', 'no-cache')
         .header('Expires', 0)
-        .header('AMP-Access-Control-Allow-Source-Origin', HOST)
-        .header('Access-Control-Allow-Origin', HOST)
+        .header('AMP-Access-Control-Allow-Source-Origin', request.query['__amp_source_origin'])
+        .header('Access-Control-Allow-Origin', request.query['__amp_source_origin'])
       } else {
         return reply({
           access: false,

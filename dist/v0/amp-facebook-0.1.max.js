@@ -2199,7 +2199,7 @@ function preloadBootstrap(window, preconnect) {
 
   // While the URL may point to a custom domain, this URL will always be
   // fetched by it.
-  var scriptUrl = _mode.getMode().localDev ? getAdsLocalhost(window) + '/dist.3p/current/integration.js' : _config.urls.thirdParty + '/1481021772855/f.js';
+  var scriptUrl = _mode.getMode().localDev ? getAdsLocalhost(window) + '/dist.3p/current/integration.js' : _config.urls.thirdParty + '/1481118967718/f.js';
   preconnect.preload(scriptUrl, 'script');
 }
 
@@ -2238,9 +2238,9 @@ function getDefaultBootstrapBaseUrl(parentWindow) {
     if (overrideBootstrapBaseUrl) {
       return overrideBootstrapBaseUrl;
     }
-    return getAdsLocalhost(parentWindow) + '/dist.3p/' + (_mode.getMode().minified ? '1481021772855/frame' : 'current/frame.max') + '.html';
+    return getAdsLocalhost(parentWindow) + '/dist.3p/' + (_mode.getMode().minified ? '1481118967718/frame' : 'current/frame.max') + '.html';
   }
-  return 'https://' + getSubDomain(parentWindow) + ('.' + _config.urls.thirdPartyFrameHost + '/1481021772855/frame.html');
+  return 'https://' + getSubDomain(parentWindow) + ('.' + _config.urls.thirdPartyFrameHost + '/1481118967718/frame.html');
 }
 
 function getAdsLocalhost(win) {
@@ -2300,7 +2300,7 @@ function getCustomBootstrapBaseUrl(parentWindow, opt_strictForUnitTest) {
   // redirect to the proxy origin which is the important one.
   var parsed = _url.parseUrl(url);
   _log.user().assert(parsed.hostname == 'localhost' && !opt_strictForUnitTest || parsed.origin != _url.parseUrl(parentWindow.location.href).origin, '3p iframe url must not be on the same origin as the current doc' + 'ument %s (%s) in element %s. See https://github.com/ampproject/amphtml' + '/blob/master/spec/amp-iframe-origin-policy.md for details.', url, parsed.origin, meta);
-  return url + '?1481021772855';
+  return url + '?1481118967718';
 }
 
 /**
@@ -5079,7 +5079,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481021772855';
+var version = '1481118967718';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -5221,10 +5221,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481021772855` and thus `mode.version` contain only
+  // Currently `1481118967718` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481021772855 should contain
+  // TODO(erwinmombay): decide whether 1481118967718 should contain
   // minor version.
   return '01' + version;
 }

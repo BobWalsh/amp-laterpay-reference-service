@@ -8078,7 +8078,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481020541424') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481113575004') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -9814,9 +9814,9 @@ _chunk.chunk(self.document, function initial() {
 // tag to give some information that can be used in error reports.
 // (At least by sophisticated users).
 if (self.console) {
-  (console.info || console.log).call(console, 'Powered by AMP ⚡ HTML – Version 1481020541424', self.location.href);
+  (console.info || console.log).call(console, 'Powered by AMP ⚡ HTML – Version 1481113575004', self.location.href);
 }
-self.document.documentElement.setAttribute('amp-version', '1481020541424');
+self.document.documentElement.setAttribute('amp-version', '1481113575004');
 
 },{"../../build/css":1,"../../third_party/babel/custom-babel-helpers":113,"../chunk":12,"../custom-element":17,"../document-click":18,"../error":26,"../experiments":28,"../font-stylesheet-timeout":34,"../impression":37,"../polyfills":53,"../pull-to-refresh":59,"../runtime":62,"../service-worker/install":63,"../service/ampdoc-impl":66,"../service/performance-impl":73,"../style-installer":94,"../validator-integration":104,"./inabox":39}],39:[function(require,module,exports){
 exports.__esModule = true;
@@ -11746,7 +11746,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481020541424';
+var version = '1481113575004';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -11888,10 +11888,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481020541424` and thus `mode.version` contain only
+  // Currently `1481113575004` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481020541424 should contain
+  // TODO(erwinmombay): decide whether 1481113575004 should contain
   // minor version.
   return '01' + version;
 }
@@ -23182,7 +23182,7 @@ var GlobalVariableSource = (function (_VariableSource) {
 
     // returns the AMP version number
     this.set('AMP_VERSION', function () {
-      return '1481020541424';
+      return '1481113575004';
     });
 
     this.set('BACKGROUND_STATE', function () {

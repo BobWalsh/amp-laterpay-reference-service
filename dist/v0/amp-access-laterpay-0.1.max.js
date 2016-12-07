@@ -39,10 +39,17 @@ var _srcVsync = require('../../../src/vsync');
 var _srcXhr = require('../../../src/xhr');
 
 var TAG = 'amp-access-laterpay';
-//const CONFIG_URL = 'https://connector.laterpay.net';
-var CONFIG_URL = 'https://amp-laterpay-demo.herokuapp.com';
+var CONFIG_URL = 'https://connector.laterpay.net';
 var CONFIG_BASE_PATH = '/api/public/amp?' + 'article_url=CANONICAL_URL' + '&amp_reader_id=READER_ID' + '&return_url=RETURN_URL';
 var AUTHORIZATION_TIMEOUT = 3000;
+
+var DEFAULT_MESSAGES = {
+  decimalDelimeter: '.',
+  premiumContentTitle: 'Buy only this article',
+  ppuButton: 'Buy Now, Pay Later',
+  sisButton: 'Buy Now',
+  defaultButton: 'Buy Now'
+};
 
 /**
  * @typedef {{
@@ -111,6 +118,9 @@ var LaterpayVendor = (function () {
     /** @private @const {!Array<Event>} */
     this.purchaseOptionListeners_ = [];
 
+    /** @private @const {!boolean} */
+    this.containerEmpty_ = true;
+
     /** @private @const {?Node} */
     this.selectedPurchaseOption_ = null;
 
@@ -125,6 +135,12 @@ var LaterpayVendor = (function () {
     ) ? this.laterpayConfig_.configUrl
       : CONFIG_URL;
       */
+
+    /** @private {string} */
+    this.currentLocale_ = this.laterpayConfig_.locale || 'en';
+
+    /** @private {Object} */
+    this.i18n_ = Object.assign(DEFAULT_MESSAGES, this.laterpayConfig_.localeMessages || {});
 
     /** @private {string} */
     this.purchaseConfigBaseUrl_ = configUrl + CONFIG_BASE_PATH;
@@ -162,14 +178,16 @@ var LaterpayVendor = (function () {
       if (response.status === 204) {
         throw _srcLog.user().createError('No merchant domains have been matched for this ' + 'article, or no paid content configurations are setup.');
       }
-      _this.emptyContainer_();
       window.scrollTo(0, 0);
+      _this.emptyContainer_();
       return { access: response.access };
     }, function (err) {
-      var status = err.response.status;
+      var status = err && err.response && err.response.status;
       if (status === 402) {
         _this.purchaseConfig_ = err.responseJson;
-        _this.renderPurchaseOverlay_();
+        // empty before rendering, in case authorization is being called again
+        // with the same state
+        _this.emptyContainer_().then(_this.renderPurchaseOverlay_.bind(_this));
       } else {
         throw err;
       }
@@ -218,11 +236,16 @@ var LaterpayVendor = (function () {
 
   /**
    * @private
+   * @returns Promise
    */
 
   LaterpayVendor.prototype.emptyContainer_ = function emptyContainer_() {
     var _this3 = this;
 
+    // no need to do all of this if the container is already empty
+    if (this.containerEmpty_) {
+      return Promise.resolve();
+    }
     var unlistener = undefined;
     while (unlistener = this.purchaseOptionListeners_.shift()) {
       unlistener();
@@ -230,8 +253,9 @@ var LaterpayVendor = (function () {
     if (this.purchaseButtonListener_) {
       this.purchaseButtonListener_();
     }
-    this.vsync_.mutate(function () {
-      return _srcDom.removeChildren(_this3.getContainer_());
+    return this.vsync_.mutatePromise(function () {
+      _this3.containerEmpty_ = true;
+      _srcDom.removeChildren(_this3.getContainer_());
     });
   };
 
@@ -244,20 +268,20 @@ var LaterpayVendor = (function () {
 
     var laterpayList = this.getContainer_();
     var listContainer = this.doc_.createElement('ul');
-    // TODO set these up somewhere else and make them configurable
-    this.purchaseConfig_.premiumcontent.title = 'Buy only this article';
+    this.purchaseConfig_.premiumcontent['tp_title'] = this.i18n_.premiumContentTitle;
     this.purchaseConfig_.premiumcontent.description = this.getArticleTitle_();
-    listContainer.appendChild(this.createPurchaseOption_(this.purchaseConfig_.premiumcontent, 'Buy Now, Pay Later'));
+    listContainer.appendChild(this.createPurchaseOption_(this.purchaseConfig_.premiumcontent, this.i18n_.ppuButton));
     this.purchaseConfig_.timepasses.forEach(function (timepass) {
-      listContainer.appendChild(_this4.createPurchaseOption_(timepass, 'Buy Now'));
+      listContainer.appendChild(_this4.createPurchaseOption_(timepass, _this4.i18n_.sisButton));
     });
     var purchaseButton = this.doc_.createElement('button');
-    purchaseButton.textContent = 'Buy Now';
+    purchaseButton.textContent = this.i18n_.defaultButton;
     purchaseButton.disabled = true;
     this.purchaseButton_ = purchaseButton;
     this.purchaseButtonListener_ = _srcEventHelper.listen(purchaseButton, 'click', this.handlePurchase_.bind(this));
     laterpayList.appendChild(listContainer);
     laterpayList.appendChild(purchaseButton);
+    this.containerEmpty_ = false;
   };
 
   /**
@@ -270,20 +294,18 @@ var LaterpayVendor = (function () {
   LaterpayVendor.prototype.createPurchaseOption_ = function createPurchaseOption_(option, purchaseActionLabel) {
     var li = this.doc_.createElement('li');
     var control = this.doc_.createElement('label');
-    control['for'] = option.title;
+    control['for'] = option.tp_title;
     control.appendChild(this.createRadioControl_(option, purchaseActionLabel));
     var titleContainer = this.doc_.createElement('div');
     var title = this.doc_.createElement('span');
-    title.textContent = option.title;
+    title.textContent = option.tp_title;
     titleContainer.appendChild(title);
     var description = this.doc_.createElement('p');
     description.textContent = option.description;
     titleContainer.appendChild(description);
     control.appendChild(titleContainer);
     li.appendChild(control);
-    var price = this.doc_.createElement('p');
-    price.textContent = this.formatPrice_(option.price);
-    li.appendChild(price);
+    li.appendChild(this.createPrice_(option.price));
     return li;
   };
 
@@ -298,7 +320,7 @@ var LaterpayVendor = (function () {
     var radio = this.doc_.createElement('input');
     radio.name = 'purchaseOption';
     radio.type = 'radio';
-    radio.id = option.title;
+    radio.id = option.tp_title;
     radio.value = option.purchase_url;
     radio.setAttribute('data-purchase-action-label', purchaseActionLabel);
     this.purchaseOptionListeners_.push(_srcEventHelper.listen(radio, 'change', this.handlePurchaseOptionSelection_.bind(this)));
@@ -307,15 +329,36 @@ var LaterpayVendor = (function () {
 
   /**
    * @param {!Object<string, number>} price
+   * @return {!Node}
+   * @private
+   */
+
+  LaterpayVendor.prototype.createPrice_ = function createPrice_(price) {
+    var currency = Object.keys(price)[0];
+    var formattedPrice = this.formatPrice_(price[currency]);
+    var valueEl = this.doc_.createElement('span');
+    valueEl.textContent = formattedPrice;
+    var currencyEl = this.doc_.createElement('sup');
+    currencyEl.textContent = currency;
+    var priceEl = this.doc_.createElement('p');
+    priceEl.appendChild(valueEl);
+    priceEl.appendChild(currencyEl);
+    return priceEl;
+  };
+
+  /**
+   * @param {!number} priceValue
    * @return {!string}
    * @private
    */
 
-  LaterpayVendor.prototype.formatPrice_ = function formatPrice_(price) {
-    // TODO do the actual formatting of the currency value based on the
-    // currency type
-    var currency = Object.keys(price)[0];
-    return price[currency] + currency;
+  LaterpayVendor.prototype.formatPrice_ = function formatPrice_(priceValue) {
+    var value = priceValue / 100;
+    var props = {
+      style: 'decimal',
+      minimumFractionDigits: 0
+    };
+    return value.toLocaleString(this.currentLocale_, props);
   };
 
   /**
@@ -4299,7 +4342,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481021772855';
+var version = '1481118967718';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -4441,10 +4484,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481021772855` and thus `mode.version` contain only
+  // Currently `1481118967718` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481021772855 should contain
+  // TODO(erwinmombay): decide whether 1481118967718 should contain
   // minor version.
   return '01' + version;
 }

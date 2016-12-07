@@ -7113,7 +7113,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481020541424') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481113575004') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -8393,7 +8393,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481020541424';
+var version = '1481113575004';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -8535,10 +8535,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481020541424` and thus `mode.version` contain only
+  // Currently `1481113575004` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481020541424 should contain
+  // TODO(erwinmombay): decide whether 1481113575004 should contain
   // minor version.
   return '01' + version;
 }

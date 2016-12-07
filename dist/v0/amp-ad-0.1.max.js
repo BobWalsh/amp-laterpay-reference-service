@@ -972,7 +972,7 @@ var GoogleAdLifecycleReporter = (function (_BaseLifecycleReporter) {
     var qqidParam = encodedQqid ? '&qqid.' + this.slotId_ + '=' + encodedQqid : '';
     var eid = this.element_.getAttribute(_trafficExperiments.EXPERIMENT_ATTRIBUTE);
     var eidParam = eid ? '&e=' + encodeURIComponent(eid) : '';
-    var pingUrl = this.pingbackAddress_ + '?' + ('s=' + this.namespace_) + ('&v=2&it=' + name + '.' + delta + ',' + name + '_' + this.slotId_ + '.' + delta) + ('&rt=stage.' + stageId + ',slotId.' + this.slotId_) + ('&c=' + this.correlator_) + '&rls=1481020541424' + ('' + eidParam + qqidParam) + ('&it.' + this.slotName_ + '=' + name + '.' + delta) + ('&rt.' + this.slotName_ + '=stage.' + stageId) + ('&met.' + this.slotName_ + '=stage_' + stageId + '.' + delta);
+    var pingUrl = this.pingbackAddress_ + '?' + ('s=' + this.namespace_) + ('&v=2&it=' + name + '.' + delta + ',' + name + '_' + this.slotId_ + '.' + delta) + ('&rt=stage.' + stageId + ',slotId.' + this.slotId_) + ('&c=' + this.correlator_) + '&rls=1481113575004' + ('' + eidParam + qqidParam) + ('&it.' + this.slotName_ + '=' + name + '.' + delta) + ('&rt.' + this.slotName_ + '=stage.' + stageId) + ('&met.' + this.slotName_ + '=stage_' + stageId + '.' + delta);
     return pingUrl;
   };
 
@@ -1625,7 +1625,7 @@ function buildAdUrl(a4a, baseUrl, startTime, slotNumber, queryParams, unboundedQ
   var allQueryParams = queryParams.concat([{
     name: 'is_amp',
     value: AmpAdImplementation.AMP_AD_XHR_TO_IFRAME_OR_AMP
-  }, { name: 'amp_v', value: '1481020541424' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
+  }, { name: 'amp_v', value: '1481113575004' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
     name: 'loc',
     value: global.location.href == documentInfo.canonicalUrl ? null : global.location.href
   }, { name: 'ref', value: referrer }]);
@@ -6712,7 +6712,7 @@ function preloadBootstrap(window, preconnect) {
 
   // While the URL may point to a custom domain, this URL will always be
   // fetched by it.
-  var scriptUrl = _mode.getMode().localDev ? getAdsLocalhost(window) + '/dist.3p/current/integration.js' : _config.urls.thirdParty + '/1481020541424/f.js';
+  var scriptUrl = _mode.getMode().localDev ? getAdsLocalhost(window) + '/dist.3p/current/integration.js' : _config.urls.thirdParty + '/1481113575004/f.js';
   preconnect.preload(scriptUrl, 'script');
 }
 
@@ -6751,9 +6751,9 @@ function getDefaultBootstrapBaseUrl(parentWindow) {
     if (overrideBootstrapBaseUrl) {
       return overrideBootstrapBaseUrl;
     }
-    return getAdsLocalhost(parentWindow) + '/dist.3p/' + (_mode.getMode().minified ? '1481020541424/frame' : 'current/frame.max') + '.html';
+    return getAdsLocalhost(parentWindow) + '/dist.3p/' + (_mode.getMode().minified ? '1481113575004/frame' : 'current/frame.max') + '.html';
   }
-  return 'https://' + getSubDomain(parentWindow) + ('.' + _config.urls.thirdPartyFrameHost + '/1481020541424/frame.html');
+  return 'https://' + getSubDomain(parentWindow) + ('.' + _config.urls.thirdPartyFrameHost + '/1481113575004/frame.html');
 }
 
 function getAdsLocalhost(win) {
@@ -6813,7 +6813,7 @@ function getCustomBootstrapBaseUrl(parentWindow, opt_strictForUnitTest) {
   // redirect to the proxy origin which is the important one.
   var parsed = _url.parseUrl(url);
   _log.user().assert(parsed.hostname == 'localhost' && !opt_strictForUnitTest || parsed.origin != _url.parseUrl(parentWindow.location.href).origin, '3p iframe url must not be on the same origin as the current doc' + 'ument %s (%s) in element %s. See https://github.com/ampproject/amphtml' + '/blob/master/spec/amp-iframe-origin-policy.md for details.', url, parsed.origin, meta);
-  return url + '?1481020541424';
+  return url + '?1481113575004';
 }
 
 /**
@@ -8651,7 +8651,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481020541424') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481113575004') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -11741,7 +11741,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481020541424';
+var version = '1481113575004';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -11883,10 +11883,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481020541424` and thus `mode.version` contain only
+  // Currently `1481113575004` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481020541424 should contain
+  // TODO(erwinmombay): decide whether 1481113575004 should contain
   // minor version.
   return '01' + version;
 }
@@ -13494,7 +13494,7 @@ var GlobalVariableSource = (function (_VariableSource) {
 
     // returns the AMP version number
     this.set('AMP_VERSION', function () {
-      return '1481020541424';
+      return '1481113575004';
     });
 
     this.set('BACKGROUND_STATE', function () {

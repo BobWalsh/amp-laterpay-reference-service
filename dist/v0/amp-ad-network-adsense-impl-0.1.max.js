@@ -972,7 +972,7 @@ var GoogleAdLifecycleReporter = (function (_BaseLifecycleReporter) {
     var qqidParam = encodedQqid ? '&qqid.' + this.slotId_ + '=' + encodedQqid : '';
     var eid = this.element_.getAttribute(_trafficExperiments.EXPERIMENT_ATTRIBUTE);
     var eidParam = eid ? '&e=' + encodeURIComponent(eid) : '';
-    var pingUrl = this.pingbackAddress_ + '?' + ('s=' + this.namespace_) + ('&v=2&it=' + name + '.' + delta + ',' + name + '_' + this.slotId_ + '.' + delta) + ('&rt=stage.' + stageId + ',slotId.' + this.slotId_) + ('&c=' + this.correlator_) + '&rls=1481021772855' + ('' + eidParam + qqidParam) + ('&it.' + this.slotName_ + '=' + name + '.' + delta) + ('&rt.' + this.slotName_ + '=stage.' + stageId) + ('&met.' + this.slotName_ + '=stage_' + stageId + '.' + delta);
+    var pingUrl = this.pingbackAddress_ + '?' + ('s=' + this.namespace_) + ('&v=2&it=' + name + '.' + delta + ',' + name + '_' + this.slotId_ + '.' + delta) + ('&rt=stage.' + stageId + ',slotId.' + this.slotId_) + ('&c=' + this.correlator_) + '&rls=1481118967718' + ('' + eidParam + qqidParam) + ('&it.' + this.slotName_ + '=' + name + '.' + delta) + ('&rt.' + this.slotName_ + '=stage.' + stageId) + ('&met.' + this.slotName_ + '=stage_' + stageId + '.' + delta);
     return pingUrl;
   };
 
@@ -1625,7 +1625,7 @@ function buildAdUrl(a4a, baseUrl, startTime, slotNumber, queryParams, unboundedQ
   var allQueryParams = queryParams.concat([{
     name: 'is_amp',
     value: AmpAdImplementation.AMP_AD_XHR_TO_IFRAME_OR_AMP
-  }, { name: 'amp_v', value: '1481021772855' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
+  }, { name: 'amp_v', value: '1481118967718' }, { name: 'd_imp', value: '1' }, { name: 'dt', value: startTime }, { name: 'adf', value: _srcUtilsDomFingerprint.domFingerprint(adElement) }, { name: 'c', value: _correlator.makeCorrelator(clientId, documentInfo.pageViewId) }, { name: 'output', value: 'html' }, { name: 'nhd', value: iframeDepth }, { name: 'eid', value: adElement.getAttribute('data-experiment-id') }, { name: 'biw', value: viewportRect.width }, { name: 'bih', value: viewportRect.height }, { name: 'adx', value: slotRect.left }, { name: 'ady', value: slotRect.top }, { name: 'u_hist', value: getHistoryLength(global) }, dtdParam], unboundedQueryParams, [{ name: 'url', value: documentInfo.canonicalUrl }, { name: 'top', value: iframeDepth ? topWindowUrlOrDomain(global) : null }, {
     name: 'loc',
     value: global.location.href == documentInfo.canonicalUrl ? null : global.location.href
   }, { name: 'ref', value: referrer }]);
@@ -7511,7 +7511,7 @@ function getErrorReportUrl(message, filename, line, col, error, hasNonAmpJs) {
   // ../tools/errortracker
   // It stores error reports via https://cloud.google.com/error-reporting/
   // for analyzing production issues.
-  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481021772855') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
+  var url = _config.urls.errorReporting + '?v=' + encodeURIComponent('1481118967718') + '&noAmp=' + (hasNonAmpJs ? 1 : 0) + '&m=' + encodeURIComponent(message.replace(_log.USER_ERROR_SENTINEL, '')) + '&a=' + (_log.isUserErrorMessage(message) ? 1 : 0);
   if (self.context && self.context.location) {
     url += '&3p=1';
   }
@@ -9465,7 +9465,7 @@ var ModeDef = undefined;
 
 exports.ModeDef = ModeDef;
 /** @type {string} */
-var version = '1481021772855';
+var version = '1481118967718';
 
 /**
  * `rtvVersion` is the prefixed version we serve off of the cdn.
@@ -9607,10 +9607,10 @@ function getRtvVersion(win, isLocalDev) {
     return win.AMP_CONFIG.v;
   }
 
-  // Currently `1481021772855` and thus `mode.version` contain only
+  // Currently `1481118967718` and thus `mode.version` contain only
   // major version. The full version however must also carry the minor version.
   // We will default to production default `01` minor version for now.
-  // TODO(erwinmombay): decide whether 1481021772855 should contain
+  // TODO(erwinmombay): decide whether 1481118967718 should contain
   // minor version.
   return '01' + version;
 }
@@ -11218,7 +11218,7 @@ var GlobalVariableSource = (function (_VariableSource) {
 
     // returns the AMP version number
     this.set('AMP_VERSION', function () {
-      return '1481021772855';
+      return '1481118967718';
     });
 
     this.set('BACKGROUND_STATE', function () {
