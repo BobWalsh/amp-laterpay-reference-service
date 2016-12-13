@@ -11,7 +11,7 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "good": "^7.0.2",
     "good-console": "^6.1.2",
