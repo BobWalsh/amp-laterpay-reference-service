@@ -224,8 +224,13 @@
 
     .amp-access-laterpay-already-purchased-container > a {
       font-size: 0.8em;
-      color: #8db444;
       text-decoration: none;
+    }
+
+    .amp-access-laterpay-already-purchased-container > a:active,
+    .amp-access-laterpay-already-purchased-container > a:visited
+     {
+      color: #8db444;
     }
 
     .amp-access-laterpay-already-purchased-container > a:hover {
@@ -396,7 +401,9 @@
 
   <script>
   setTimeout(function() {
-    window.AMP.toggleExperiment('amp-access-laterpay');
+    if(!window.AMP.isExperimentOn('amp-access-laterpay')) {
+      window.AMP.toggleExperiment('amp-access-laterpay');
+    }
   }, 1000);
   </script>
 </body>
