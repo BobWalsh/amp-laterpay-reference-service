@@ -4,7 +4,7 @@ const inert = require('inert');
 const fs = require('fs');
 
 const HOST = process.env.NODE_ENV === 'production' ?
-    'https://amp-laterpay-demo.herokuapp.com' :
+    'https://amp-laterpay-demo.herokuapp.com' : 
     'http://localhost:8080'
 
 const server = new Hapi.Server({
