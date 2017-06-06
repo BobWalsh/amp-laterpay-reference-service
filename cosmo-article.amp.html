@@ -240,7 +240,7 @@
     }
 
     .content-container {
-      min-height: 1600px;
+      min-height: 1900px;
     }
 
   </style>
@@ -394,6 +394,10 @@
     </article>
   </main>
 
-  <script async>AMP.toggleExperiment('amp-access-laterpay');</script>
+  <script async>
+  setTimeout(function() {
+    window.AMP.toggleExperiment('amp-access-laterpay');
+  }, 1000);
+  </script>
 </body>
 </html>
