@@ -194,7 +194,7 @@ server.register([
       path:'/',
       handler: (request, reply) => {
           return reply
-          .redirect('/index.html')
+          .redirect('/cosmo-article.amp.html')
       }
   });
 
