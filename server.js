@@ -134,6 +134,20 @@ server.register([
         return reply({
           access: false,
           apl: HOST + '/already_purchased',
+          subscriptions: [
+            {
+              title: '',
+              description: 'This is a monthly subscription',
+              price: {
+                USD: 199
+              },
+              purchase_type: 'sis',
+              purchase_url: HOST + '/dialog/buy/sub/monthly',
+              tp_title: 'Monthly sub',
+              validity_unit: 'm',
+              validity_value: 1
+            }
+          ],
           timepasses: [
             {
               title: '',
