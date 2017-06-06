@@ -11,7 +11,10 @@
       "vendor": "laterpay",
       "laterpay": {
         "configUrl": "https://connector.dev.laterpaytest.net",
-        "articleTitleSelector": ".content-container > header > h1"
+        "articleTitleSelector": ".content-container > header > h1",
+        "localeMessages": {
+          "header": "<img src='/logo-cosmo.png' />"
+        }
       }
     }
   </script>
@@ -159,7 +162,7 @@
       align-items: center;
       font-family: sans-serif;
       margin-top: 60px;
-      padding: 50px 40px 30px 25px;
+      padding: 50px 40px 25px 25px;
     }
     @media (max-width: 420px) {
       #amp-access-laterpay-dialog {
@@ -210,6 +213,10 @@
       margin-left: auto;
     }
 
+    .amp-access-laterpay-price-container sup {
+      margin-left: 2px;
+    }
+
     .amp-access-laterpay-purchase-button {
       font-size: 1.1em;
       padding: 0.5em 0.8em;
@@ -222,7 +229,7 @@
     }
 
     .amp-access-laterpay-purchase-button:disabled {
-      opacity: 0.8;
+      opacity: 0.5;
     }
 
     .amp-access-laterpay-already-purchased-link-container > a {
